@@ -9,18 +9,21 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService {
+public class AccountService implements IAccountService{
     private final AccountRepository accountRepository;
 
+    @Override
     public Account createAccount(Account account) {
         return accountRepository.save(account);
     }
 
-    public List<Account> findAll() {
+    @Override
+    public List<Account> getAllAccounts() {
         return accountRepository.findAll();
     }
 
-    public Account findById(Long id) {
+    @Override
+    public Account getAccountById(Long id) {
         return accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found"));
     }
 }

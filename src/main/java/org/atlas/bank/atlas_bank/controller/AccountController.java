@@ -3,9 +3,9 @@ package org.atlas.bank.atlas_bank.controller;
 import lombok.RequiredArgsConstructor;
 import org.atlas.bank.atlas_bank.model.Account;
 import org.atlas.bank.atlas_bank.model.Transaction;
-import org.atlas.bank.atlas_bank.service.AccountService;
-import org.atlas.bank.atlas_bank.service.TransactionQueryService;
-import org.atlas.bank.atlas_bank.service.TransferService;
+import org.atlas.bank.atlas_bank.service.IAccountService;
+import org.atlas.bank.atlas_bank.service.ITransactionQueryService;
+import org.atlas.bank.atlas_bank.service.ITransferService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +17,9 @@ import java.util.List;
 @RequestMapping("/api/accounts")
 @RequiredArgsConstructor
 public class AccountController {
-    private final AccountService accountService;
-    private final TransferService transferService;
-    private final TransactionQueryService transactionQueryService;
+    private final IAccountService accountService;
+    private final ITransferService transferService;
+    private final ITransactionQueryService transactionQueryService;
 
     @PostMapping
     public ResponseEntity<Account> create(@RequestBody Account account) {
@@ -28,12 +28,12 @@ public class AccountController {
 
     @GetMapping
     public ResponseEntity<List<Account>> findAll() {
-        return ResponseEntity.ok(accountService.findAll());
+        return ResponseEntity.ok(accountService.getAllAccounts());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Account> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(accountService.findById(id));
+        return ResponseEntity.ok(accountService.getAccountById(id));
     }
 
     @PostMapping("/transfer")
