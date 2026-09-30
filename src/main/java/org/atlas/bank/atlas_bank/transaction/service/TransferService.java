@@ -1,12 +1,12 @@
-package org.atlas.bank.atlas_bank.service;
+package org.atlas.bank.atlas_bank.transaction.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.atlas.bank.atlas_bank.model.Account;
-import org.atlas.bank.atlas_bank.model.Transaction;
-import org.atlas.bank.atlas_bank.repository.AccountRepository;
-import org.atlas.bank.atlas_bank.repository.TransactionRepository;
-import org.atlas.bank.atlas_bank.service.fee.FeeCalculator;
+import org.atlas.bank.atlas_bank.account.model.Account;
+import org.atlas.bank.atlas_bank.transaction.model.Transaction;
+import org.atlas.bank.atlas_bank.account.repository.AccountRepository;
+import org.atlas.bank.atlas_bank.transaction.repository.TransactionRepository;
+import org.atlas.bank.atlas_bank.transaction.service.fee.FeeCalculator;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
