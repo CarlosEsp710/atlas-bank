@@ -2,11 +2,13 @@ package org.atlas.bank.atlas_bank.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.atlas.bank.atlas_bank.model.Account;
+import org.atlas.bank.atlas_bank.model.Transaction;
 import org.atlas.bank.atlas_bank.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -28,5 +30,15 @@ public class AccountController {
     @GetMapping("/{id}")
     public ResponseEntity<Account> findById(@PathVariable Long id) {
         return ResponseEntity.ok(accountService.findById(id));
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<Transaction> transfer(@RequestParam Long fromId, @RequestParam Long toId, @RequestParam BigDecimal amount) {
+        return ResponseEntity.ok(accountService.transfer(fromId, toId, amount));
+    }
+
+    @GetMapping("/{id}/transactions")
+    public ResponseEntity<List<Transaction>> getTransactions(@PathVariable Long id) {
+        return ResponseEntity.ok(accountService.getTransactions(id));
     }
 }
