@@ -1,0 +1,45 @@
+package org.atlas.bank.atlas_bank.shared.exception;
+
+import org.atlas.bank.atlas_bank.account.exception.AccountNotFoundException;
+import org.atlas.bank.atlas_bank.transaction.exception.AccountNotActiveException;
+import org.atlas.bank.atlas_bank.transaction.exception.InsufficientFundsException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleGenericException(Exception ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        problemDetail.setTitle("Internal Server Error");
+        problemDetail.setDetail(ex.getMessage());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ProblemDetail handleAccountNotFoundException(AccountNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problemDetail.setTitle("Account Not Found");
+        problemDetail.setDetail(ex.getMessage());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(AccountNotActiveException.class)
+    public ProblemDetail handleAccountNotActiveException(AccountNotActiveException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle("Account Not Active");
+        problemDetail.setDetail(ex.getMessage());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(InsufficientFundsException.class)
+    public ProblemDetail handleInsufficientFundsException(InsufficientFundsException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_CONTENT);
+        problemDetail.setTitle("Insufficient Funds");
+        problemDetail.setDetail(ex.getMessage());
+        return problemDetail;
+    }
+}
