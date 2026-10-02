@@ -1,5 +1,6 @@
 package org.atlas.bank.atlas_bank.account.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.atlas.bank.atlas_bank.account.DTO.AccountMapper;
 import org.atlas.bank.atlas_bank.account.DTO.AccountResponse;
@@ -21,7 +22,7 @@ public class AccountController {
     private final AccountMapper accountMapper;
 
     @PostMapping
-    public ResponseEntity<AccountResponse> create(@RequestBody CreateAccountRequest request) {
+    public ResponseEntity<AccountResponse> create(@Valid @RequestBody CreateAccountRequest request) {
         Account account = accountMapper.toEntity(request);
         Account createdAccount = accountService.createAccount(account);
         return ResponseEntity.status(HttpStatus.CREATED).body(accountMapper.toResponse(createdAccount));

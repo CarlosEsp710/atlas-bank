@@ -1,5 +1,6 @@
 package org.atlas.bank.atlas_bank.transaction.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.atlas.bank.atlas_bank.transaction.DTO.TransactionMapper;
 import org.atlas.bank.atlas_bank.transaction.DTO.TransactionResponse;
@@ -22,7 +23,7 @@ public class TransactionController {
     private final TransactionMapper transactionMapper;
 
     @PostMapping("/transfer")
-    public ResponseEntity<TransactionResponse> transfer(@RequestBody TransferRequest transferRequest) {
+    public ResponseEntity<TransactionResponse> transfer(@Valid @RequestBody TransferRequest transferRequest) {
         return ResponseEntity.ok(transactionMapper.toResponse(transferService.execute(
                         transferRequest.getSourceAccountId(),
                         transferRequest.getTargetAccountId(),

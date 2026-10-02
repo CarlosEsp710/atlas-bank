@@ -5,8 +5,12 @@ import org.atlas.bank.atlas_bank.transaction.exception.AccountNotActiveException
 import org.atlas.bank.atlas_bank.transaction.exception.InsufficientFundsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -40,6 +44,23 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_CONTENT);
         problemDetail.setTitle("Insufficient Funds");
         problemDetail.setDetail(ex.getMessage());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle("Validation Failed");
+
+        List<String> errorMessages = new ArrayList<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errorMessages.add(error.getField() + ": " + error.getDefaultMessage());
+        });
+        ex.getBindingResult().getGlobalErrors().forEach(error -> {
+            errorMessages.add(error.getObjectName() + ": " + error.getDefaultMessage());
+        });
+        problemDetail.setProperty("errors", errorMessages);
+
         return problemDetail;
     }
 }
