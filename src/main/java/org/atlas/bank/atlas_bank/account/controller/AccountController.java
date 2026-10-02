@@ -1,6 +1,8 @@
 package org.atlas.bank.atlas_bank.account.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.atlas.bank.atlas_bank.account.DTO.AccountResponse;
+import org.atlas.bank.atlas_bank.account.DTO.CreateAccountRequest;
 import org.atlas.bank.atlas_bank.account.model.Account;
 import org.atlas.bank.atlas_bank.account.service.IAccountService;
 import org.springframework.http.HttpStatus;
@@ -17,17 +19,41 @@ public class AccountController {
     private final IAccountService accountService;
 
     @PostMapping
-    public ResponseEntity<Account> create(@RequestBody Account account) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(account));
+    public ResponseEntity<AccountResponse> create(@RequestBody CreateAccountRequest request) {
+        Account account = new Account();
+        account.setAccountNumber(request.getAccountNumber());
+        account.setOwnerName(request.getOwnerName());
+        account.setEmail(request.getEmail());
+        account.setType(request.getType());
+        account.setBalance(request.getBalance());
+
+        Account createdAccount = accountService.createAccount(account);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(createdAccount));
     }
 
     @GetMapping
-    public ResponseEntity<List<Account>> findAll() {
-        return ResponseEntity.ok(accountService.getAllAccounts());
+    public ResponseEntity<List<AccountResponse>> findAll() {
+        List<AccountResponse> responses = accountService.getAllAccounts().stream()
+                .map(this::toResponse)
+                .toList();
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Account> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(accountService.getAccountById(id));
+    public ResponseEntity<AccountResponse> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(toResponse(accountService.getAccountById(id)));
+    }
+
+    private AccountResponse toResponse(Account account) {
+        AccountResponse response = new AccountResponse();
+        response.setId(account.getId());
+        response.setAccountNumber(account.getAccountNumber());
+        response.setOwnerName(account.getOwnerName());
+        response.setEmail(account.getEmail());
+        response.setType(account.getType());
+        response.setBalance(account.getBalance());
+        response.setStatus(account.getStatus());
+        response.setCreatedAt(account.getCreatedAt());
+        return response;
     }
 }
