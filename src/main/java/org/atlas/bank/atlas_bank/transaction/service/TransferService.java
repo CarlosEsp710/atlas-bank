@@ -16,11 +16,19 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-public class TransferService implements ITransferService {
+public class TransferService extends TransactionProcessor<TransferContext> implements ITransferService {
     private final AccountRepository accountRepository;
-    private final TransactionRepository transactionRepository;
     private final List<FeeCalculator> feeCalculators;
+
+    public TransferService(
+            TransactionRepository transactionRepository,
+            AccountRepository accountRepository,
+            List<FeeCalculator> feeCalculators
+    ) {
+        super(transactionRepository);
+        this.accountRepository = accountRepository;
+        this.feeCalculators = feeCalculators;
+    }
 
     @Override
     @Transactional
@@ -31,38 +39,53 @@ public class TransferService implements ITransferService {
         Account to = accountRepository.findById(toId)
                 .orElseThrow(() -> new AccountNotFoundException(toId));
 
-        // Validar que la cuenta esté activa
-        if (!"ACTIVE".equals(from.getStatus())) {
-            throw new AccountNotActiveException(fromId, from.getStatus());
+        return process(new TransferContext(from, to, amount));
+    }
+
+    @Override
+    protected void validate(TransferContext context) {
+        if (!"ACTIVE".equals(context.fromAccount().getStatus())) {
+            throw new AccountNotActiveException(context.fromAccount().getId(), context.fromAccount().getStatus());
         }
-        if (!"ACTIVE".equals(to.getStatus())) {
-            throw new AccountNotActiveException(toId, to.getStatus());
+        if (!"ACTIVE".equals(context.toAccount().getStatus())) {
+            throw new AccountNotActiveException(context.toAccount().getId(), context.toAccount().getStatus());
         }
 
         // Validar fondos
-        if (from.getBalance().compareTo(amount) < 0) {
-            throw new InsufficientFundsException(fromId, from.getBalance(), amount);
+        if (context.fromAccount().getBalance().compareTo(context.amount()) < 0) {
+            throw new InsufficientFundsException(context.fromAccount().getId(), context.fromAccount().getBalance(), context.amount());
         }
+    }
 
-        // Calcular comisión
-        BigDecimal fee = feeCalculators.stream()
-                .filter(fc -> fc.supports(from.getType()))
+    @Override
+    protected BigDecimal calculateFee(TransferContext context) {
+        return feeCalculators.stream()
+                .filter(fc -> fc.supports(context.fromAccount().getType()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No se encontró un calculador de comisiones para el tipo de cuenta"))
-                .calculateFee(amount);
+                .calculateFee(context.amount());
+    }
 
+    @Override
+    protected void execute(TransferContext context, BigDecimal fee) {
         // Actualizar saldos
-        from.setBalance(from.getBalance().subtract(amount).subtract(fee));
-        to.setBalance(to.getBalance().add(amount));
+        Account from = context.fromAccount();
+        Account to = context.toAccount();
+
+        from.setBalance(from.getBalance().subtract(context.amount()).subtract(fee));
+        to.setBalance(to.getBalance().add(context.amount()));
         accountRepository.save(from);
         accountRepository.save(to);
+    }
 
+    @Override
+    protected Transaction save(TransferContext context, BigDecimal fee) {
         // Crear transacción
         Transaction transaction = new Transaction();
         transaction.setType("TRANSFER");
-        transaction.setSourceAccountId(fromId);
-        transaction.setTargetAccountId(toId);
-        transaction.setAmount(amount);
+        transaction.setSourceAccountId(context.fromAccount().getId());
+        transaction.setTargetAccountId(context.toAccount().getId());
+        transaction.setAmount(context.amount());
         transaction.setFee(fee);
         transaction.setStatus("EXECUTED");
 
