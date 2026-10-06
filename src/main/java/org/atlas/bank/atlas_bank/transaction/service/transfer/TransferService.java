@@ -1,7 +1,6 @@
-package org.atlas.bank.atlas_bank.transaction.service;
+package org.atlas.bank.atlas_bank.transaction.service.transfer;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.atlas.bank.atlas_bank.account.exception.AccountNotFoundException;
 import org.atlas.bank.atlas_bank.account.model.Account;
 import org.atlas.bank.atlas_bank.transaction.exception.AccountNotActiveException;
@@ -9,6 +8,7 @@ import org.atlas.bank.atlas_bank.transaction.exception.InsufficientFundsExceptio
 import org.atlas.bank.atlas_bank.transaction.model.Transaction;
 import org.atlas.bank.atlas_bank.account.repository.AccountRepository;
 import org.atlas.bank.atlas_bank.transaction.repository.TransactionRepository;
+import org.atlas.bank.atlas_bank.transaction.service.factory.TransactionFactory;
 import org.atlas.bank.atlas_bank.transaction.service.fee.FeeCalculator;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +44,7 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
 
     @Override
     protected void validate(TransferContext context) {
+        // Validar estado de las cuentas
         if (!"ACTIVE".equals(context.fromAccount().getStatus())) {
             throw new AccountNotActiveException(context.fromAccount().getId(), context.fromAccount().getStatus());
         }
@@ -59,6 +60,7 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
 
     @Override
     protected BigDecimal calculateFee(TransferContext context) {
+        // Calcular comisión según el tipo de cuenta
         return feeCalculators.stream()
                 .filter(fc -> fc.supports(context.fromAccount().getType()))
                 .findFirst()
@@ -80,14 +82,8 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
 
     @Override
     protected Transaction save(TransferContext context, BigDecimal fee) {
-        // Crear transacción
-        Transaction transaction = new Transaction();
-        transaction.setType("TRANSFER");
-        transaction.setSourceAccountId(context.fromAccount().getId());
-        transaction.setTargetAccountId(context.toAccount().getId());
-        transaction.setAmount(context.amount());
-        transaction.setFee(fee);
-        transaction.setStatus("EXECUTED");
+        // Crear y guardar transacción
+        Transaction transaction = TransactionFactory.createTransaction(context, fee);
 
         return transactionRepository.save(transaction);
     }

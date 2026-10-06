@@ -1,4 +1,4 @@
-package org.atlas.bank.atlas_bank.transaction.service;
+package org.atlas.bank.atlas_bank.transaction.service.transfer;
 
 import org.atlas.bank.atlas_bank.transaction.model.Transaction;
 

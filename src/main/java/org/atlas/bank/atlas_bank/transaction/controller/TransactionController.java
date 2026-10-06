@@ -5,13 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.atlas.bank.atlas_bank.transaction.DTO.TransactionMapper;
 import org.atlas.bank.atlas_bank.transaction.DTO.TransactionResponse;
 import org.atlas.bank.atlas_bank.transaction.DTO.TransferRequest;
-import org.atlas.bank.atlas_bank.transaction.model.Transaction;
 import org.atlas.bank.atlas_bank.transaction.service.ITransactionQueryService;
-import org.atlas.bank.atlas_bank.transaction.service.ITransferService;
+import org.atlas.bank.atlas_bank.transaction.service.transfer.ITransferService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
