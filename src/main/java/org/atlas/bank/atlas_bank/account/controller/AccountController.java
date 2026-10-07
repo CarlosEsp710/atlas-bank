@@ -1,7 +1,9 @@
 package org.atlas.bank.atlas_bank.account.controller;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.atlas.bank.atlas_bank.account.DTO.AccountMapper;
 import org.atlas.bank.atlas_bank.account.DTO.AccountResponse;
 import org.atlas.bank.atlas_bank.account.DTO.CreateAccountRequest;
@@ -19,10 +21,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
+@Slf4j
 public class AccountController {
     private final IAccountService accountService;
     private final AccountMapper accountMapper;
     private final AccountDashboardFacade accountDashboardFacade;
+
+    @PostConstruct
+    public void init() {
+        log.info("Real class used for IAccountService: {}", accountService.getClass().getName());
+    }
 
     @PostMapping
     public ResponseEntity<AccountResponse> create(@Valid @RequestBody CreateAccountRequest request) {
