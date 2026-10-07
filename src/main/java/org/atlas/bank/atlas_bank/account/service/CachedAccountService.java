@@ -3,16 +3,16 @@ package org.atlas.bank.atlas_bank.account.service;
 import lombok.extern.slf4j.Slf4j;
 import org.atlas.bank.atlas_bank.account.model.Account;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @deprecated Caching is disabled; use the active account service instead.
+ */
+@Deprecated
 @Slf4j
-@Component
-@Primary
 public class CachedAccountService implements IAccountService {
     private final IAccountService delegate;
     private final Map<Long, Account> accountCache = new ConcurrentHashMap<>();
