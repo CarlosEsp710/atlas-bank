@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
+import org.atlas.bank.atlas_bank.account.model.AccountType;
 
 import java.math.BigDecimal;
 
@@ -20,8 +21,8 @@ public class CreateAccountRequest {
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Account type is required")
-    private String type;
+    @NotNull(message = "Account type is required")
+    private AccountType type;
 
     @NotNull(message = "Balance is required")
     @PositiveOrZero(message = "Balance must be positive")
