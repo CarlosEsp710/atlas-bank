@@ -3,6 +3,7 @@ package org.atlas.bank.atlas_bank.shared.exception;
 import org.atlas.bank.atlas_bank.account.exception.AccountNotFoundException;
 import org.atlas.bank.atlas_bank.transaction.exception.AccountNotActiveException;
 import org.atlas.bank.atlas_bank.transaction.exception.InsufficientFundsException;
+import org.atlas.bank.atlas_bank.transaction.service.exception.FraudCheckException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -61,6 +62,14 @@ public class GlobalExceptionHandler {
         });
         problemDetail.setProperty("errors", errorMessages);
 
+        return problemDetail;
+    }
+
+    @ExceptionHandler(FraudCheckException.class)
+    public ProblemDetail handleFraudCheckException(FraudCheckException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_CONTENT);
+        problemDetail.setTitle("Fraud Check Failed");
+        problemDetail.setDetail(ex.getMessage());
         return problemDetail;
     }
 }

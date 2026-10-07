@@ -10,8 +10,11 @@ import org.atlas.bank.atlas_bank.transaction.model.Transaction;
 import org.atlas.bank.atlas_bank.account.repository.AccountRepository;
 import org.atlas.bank.atlas_bank.transaction.repository.TransactionRepository;
 import org.atlas.bank.atlas_bank.transaction.service.event.TransactionExecutedEvent;
+import org.atlas.bank.atlas_bank.transaction.service.exception.FraudCheckException;
 import org.atlas.bank.atlas_bank.transaction.service.factory.TransactionFactory;
 import org.atlas.bank.atlas_bank.transaction.service.fee.FeeCalculator;
+import org.atlas.bank.atlas_bank.transaction.service.fraud.FraudCheckResult;
+import org.atlas.bank.atlas_bank.transaction.service.fraud.FraudChecker;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -23,18 +26,22 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
     private final AccountRepository accountRepository;
     private final List<FeeCalculator> feeCalculators;
     private final ApplicationEventPublisher eventPublisher;
+    private final FraudChecker fraudChecker;
 
     public TransferService(
             TransactionRepository transactionRepository,
             AccountRepository accountRepository,
             List<FeeCalculator> feeCalculators,
-            ApplicationEventPublisher eventPublisher
+            ApplicationEventPublisher eventPublisher,
+            FraudChecker fraudChecker
     ) {
         super(transactionRepository);
         this.accountRepository = accountRepository;
         this.feeCalculators = feeCalculators;
         this.eventPublisher = eventPublisher;
+        this.fraudChecker = fraudChecker;
     }
+
 
     @Override
     @Transactional
@@ -72,6 +79,12 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
         // Validar fondos
         if (context.fromAccount().getBalance().compareTo(context.amount()) < 0) {
             throw new InsufficientFundsException(context.fromAccount().getId(), context.fromAccount().getBalance(), context.amount());
+        }
+
+        FraudCheckResult fraudCheckResult = fraudChecker.checkTransaction(context.fromAccount().getId(), context.amount());
+
+        if (fraudCheckResult.isBlocked()) {
+            throw new FraudCheckException(fraudCheckResult.reason());
         }
     }
 
