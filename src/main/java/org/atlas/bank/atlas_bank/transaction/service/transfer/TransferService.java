@@ -3,8 +3,8 @@ package org.atlas.bank.atlas_bank.transaction.service.transfer;
 import jakarta.transaction.Transactional;
 import org.atlas.bank.atlas_bank.account.exception.AccountNotFoundException;
 import org.atlas.bank.atlas_bank.account.model.Account;
+import org.atlas.bank.atlas_bank.account.repository.DomainAccountRepository;
 import org.atlas.bank.atlas_bank.transaction.model.Transaction;
-import org.atlas.bank.atlas_bank.account.repository.AccountRepository;
 import org.atlas.bank.atlas_bank.transaction.repository.TransactionRepository;
 import org.atlas.bank.atlas_bank.transaction.service.domain.TransferDomainService;
 import org.atlas.bank.atlas_bank.transaction.service.factory.TransactionFactory;
@@ -17,20 +17,20 @@ import java.util.List;
 
 @Service
 public class TransferService extends TransactionProcessor<TransferContext> implements ITransferService {
-    private final AccountRepository accountRepository;
+    private final DomainAccountRepository domainAccountRepository;
     private final List<FeeCalculator> feeCalculators;
     private final List<TransferValidator> validators;
     private final TransferDomainService transferDomainService;
 
     public TransferService(
             TransactionRepository transactionRepository,
-            AccountRepository accountRepository,
+            DomainAccountRepository domainAccountRepository,
             List<FeeCalculator> feeCalculators,
             List<TransferValidator> validators,
             TransferDomainService transferDomainService
     ) {
         super(transactionRepository);
-        this.accountRepository = accountRepository;
+        this.domainAccountRepository = domainAccountRepository;
         this.feeCalculators = feeCalculators;
         this.transferDomainService = transferDomainService;
         this.validators = validators;
@@ -41,9 +41,9 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
     @Transactional
     public Transaction execute(Long fromId, Long toId, BigDecimal amount) {
         // Buscar cuentas
-        Account from = accountRepository.findById(fromId)
+        Account from = domainAccountRepository.findById(fromId)
                 .orElseThrow(() -> new AccountNotFoundException(fromId));
-        Account to = accountRepository.findById(toId)
+        Account to = domainAccountRepository.findById(toId)
                 .orElseThrow(() -> new AccountNotFoundException(toId));
 
         Transaction transaction = process(new TransferContext(from, to, amount));
@@ -79,8 +79,8 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
 
         transferDomainService.transfer(from, to, context.amount(), fee);
 
-        accountRepository.save(from);
-        accountRepository.save(to);
+        domainAccountRepository.save(from);
+        domainAccountRepository.save(to);
     }
 
     @Override

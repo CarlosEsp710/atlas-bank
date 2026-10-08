@@ -45,7 +45,7 @@ public class Account {
     @Column(nullable = false, length = 20)
     private AccountStatus status;
 
-    @Column(name = "costumer_id", nullable = false)
+    @Column(name = "costumer_id", nullable = true)
     private Long costumerId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
