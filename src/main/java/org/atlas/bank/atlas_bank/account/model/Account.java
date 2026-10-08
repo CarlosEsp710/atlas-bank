@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.atlas.bank.atlas_bank.shared.model.Currency;
 import org.atlas.bank.atlas_bank.shared.model.Money;
+import org.atlas.bank.atlas_bank.transaction.exception.InsufficientFundsException;
 
 import java.time.LocalDateTime;
 
@@ -44,6 +45,9 @@ public class Account {
     @Column(nullable = false, length = 20)
     private AccountStatus status;
 
+    @Column(name = "costumer_id", nullable = false)
+    private Long costumerId;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -53,5 +57,24 @@ public class Account {
 
         if (status == null) status = AccountStatus.ACTIVE;
         if (balance == null) balance = Money.zero(Currency.MXN);
+    }
+
+    public void deposit(Money amount) {
+        if (amount.isNegative()) {
+            throw new IllegalArgumentException("Deposit amount must be positive.");
+        }
+        this.balance = this.balance.add(amount);
+    }
+
+    public void withdraw(Money amount) {
+        if (amount.isNegative()) {
+            throw new IllegalArgumentException("Withdrawal amount must be positive.");
+        }
+
+        if (this.balance.isLessThan(amount)) {
+            throw new InsufficientFundsException(this.id, this.balance.getAmount(), amount.getAmount());
+        }
+
+        this.balance = this.balance.subtract(amount);
     }
 }
