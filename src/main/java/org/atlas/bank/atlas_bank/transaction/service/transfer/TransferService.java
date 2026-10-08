@@ -7,11 +7,9 @@ import org.atlas.bank.atlas_bank.transaction.model.Transaction;
 import org.atlas.bank.atlas_bank.account.repository.AccountRepository;
 import org.atlas.bank.atlas_bank.transaction.repository.TransactionRepository;
 import org.atlas.bank.atlas_bank.transaction.service.domain.TransferDomainService;
-import org.atlas.bank.atlas_bank.transaction.service.event.TransactionExecutedEvent;
 import org.atlas.bank.atlas_bank.transaction.service.factory.TransactionFactory;
 import org.atlas.bank.atlas_bank.transaction.service.fee.FeeCalculator;
 import org.atlas.bank.atlas_bank.transaction.validation.chain.TransferValidator;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,7 +19,6 @@ import java.util.List;
 public class TransferService extends TransactionProcessor<TransferContext> implements ITransferService {
     private final AccountRepository accountRepository;
     private final List<FeeCalculator> feeCalculators;
-    private final ApplicationEventPublisher eventPublisher;
     private final List<TransferValidator> validators;
     private final TransferDomainService transferDomainService;
 
@@ -29,14 +26,12 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
             TransactionRepository transactionRepository,
             AccountRepository accountRepository,
             List<FeeCalculator> feeCalculators,
-            ApplicationEventPublisher eventPublisher,
             List<TransferValidator> validators,
             TransferDomainService transferDomainService
     ) {
         super(transactionRepository);
         this.accountRepository = accountRepository;
         this.feeCalculators = feeCalculators;
-        this.eventPublisher = eventPublisher;
         this.transferDomainService = transferDomainService;
         this.validators = validators;
     }
@@ -55,16 +50,8 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
 
         transaction.advanceTo(transaction.getState().validate());
         transaction.advanceTo(transaction.getState().execute());
+        transaction.markAsExecuted();
         transactionRepository.save(transaction);
-
-        eventPublisher.publishEvent(new TransactionExecutedEvent(
-                transaction.getId(),
-                transaction.getType().name(),
-                transaction.getSourceAccountId(),
-                transaction.getTargetAccountId(),
-                transaction.getAmount(),
-                transaction.getFee()
-        ));
 
         return transaction;
     }
