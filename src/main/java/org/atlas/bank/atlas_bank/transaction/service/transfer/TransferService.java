@@ -3,6 +3,7 @@ package org.atlas.bank.atlas_bank.transaction.service.transfer;
 import jakarta.transaction.Transactional;
 import org.atlas.bank.atlas_bank.account.exception.AccountNotFoundException;
 import org.atlas.bank.atlas_bank.account.model.Account;
+import org.atlas.bank.atlas_bank.shared.model.Money;
 import org.atlas.bank.atlas_bank.transaction.model.Transaction;
 import org.atlas.bank.atlas_bank.account.repository.AccountRepository;
 import org.atlas.bank.atlas_bank.transaction.repository.TransactionRepository;
@@ -86,8 +87,12 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
         Account from = context.fromAccount();
         Account to = context.toAccount();
 
-        from.setBalance(from.getBalance().subtract(context.amount()).subtract(fee));
-        to.setBalance(to.getBalance().add(context.amount()));
+        BigDecimal newFromBalance = from.getBalance().getAmount().subtract(context.amount()).subtract(fee);
+        from.setBalance(Money.of(newFromBalance, from.getBalance().getCurrency()));
+
+        BigDecimal newToBalance = to.getBalance().getAmount().add(context.amount());
+        to.setBalance(Money.of(newToBalance, to.getBalance().getCurrency()));
+
         accountRepository.save(from);
         accountRepository.save(to);
     }
