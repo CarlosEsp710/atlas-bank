@@ -3,10 +3,10 @@ package org.atlas.bank.atlas_bank.transaction.service.transfer;
 import jakarta.transaction.Transactional;
 import org.atlas.bank.atlas_bank.account.exception.AccountNotFoundException;
 import org.atlas.bank.atlas_bank.account.model.Account;
-import org.atlas.bank.atlas_bank.shared.model.Money;
 import org.atlas.bank.atlas_bank.transaction.model.Transaction;
 import org.atlas.bank.atlas_bank.account.repository.AccountRepository;
 import org.atlas.bank.atlas_bank.transaction.repository.TransactionRepository;
+import org.atlas.bank.atlas_bank.transaction.service.domain.TransferDomainService;
 import org.atlas.bank.atlas_bank.transaction.service.event.TransactionExecutedEvent;
 import org.atlas.bank.atlas_bank.transaction.service.factory.TransactionFactory;
 import org.atlas.bank.atlas_bank.transaction.service.fee.FeeCalculator;
@@ -23,18 +23,21 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
     private final List<FeeCalculator> feeCalculators;
     private final ApplicationEventPublisher eventPublisher;
     private final List<TransferValidator> validators;
+    private final TransferDomainService transferDomainService;
 
     public TransferService(
             TransactionRepository transactionRepository,
             AccountRepository accountRepository,
             List<FeeCalculator> feeCalculators,
             ApplicationEventPublisher eventPublisher,
-            List<TransferValidator> validators
+            List<TransferValidator> validators,
+            TransferDomainService transferDomainService
     ) {
         super(transactionRepository);
         this.accountRepository = accountRepository;
         this.feeCalculators = feeCalculators;
         this.eventPublisher = eventPublisher;
+        this.transferDomainService = transferDomainService;
         this.validators = validators;
     }
 
@@ -87,11 +90,7 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
         Account from = context.fromAccount();
         Account to = context.toAccount();
 
-        BigDecimal newFromBalance = from.getBalance().getAmount().subtract(context.amount()).subtract(fee);
-        from.setBalance(Money.of(newFromBalance, from.getBalance().getCurrency()));
-
-        BigDecimal newToBalance = to.getBalance().getAmount().add(context.amount());
-        to.setBalance(Money.of(newToBalance, to.getBalance().getCurrency()));
+        transferDomainService.transfer(from, to, context.amount(), fee);
 
         accountRepository.save(from);
         accountRepository.save(to);
