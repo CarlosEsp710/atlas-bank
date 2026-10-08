@@ -2,6 +2,7 @@ package org.atlas.bank.atlas_bank.costumer.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.atlas.bank.atlas_bank.shared.model.Email;
 
 import java.time.LocalDateTime;
 
@@ -21,8 +22,9 @@ public class Costumer {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true))
+    private Email email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)

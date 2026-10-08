@@ -3,6 +3,7 @@ package org.atlas.bank.atlas_bank.account.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.atlas.bank.atlas_bank.shared.model.Currency;
+import org.atlas.bank.atlas_bank.shared.model.Email;
 import org.atlas.bank.atlas_bank.shared.model.Money;
 import org.atlas.bank.atlas_bank.transaction.exception.InsufficientFundsException;
 
@@ -27,8 +28,9 @@ public class Account {
     @Column(name = "owner_name", nullable = false)
     private String ownerName;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true))
+    private Email email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
