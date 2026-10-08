@@ -83,4 +83,10 @@ public class Transaction extends AbstractAggregateRoot<Transaction> {
                 this.fee
         ));
     }
+
+    public void executeTransfer() {
+        advanceTo(getState().validate());
+        advanceTo(getState().execute());
+        markAsExecuted();
+    }
 }
