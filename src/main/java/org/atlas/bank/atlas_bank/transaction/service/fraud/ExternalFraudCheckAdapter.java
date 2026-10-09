@@ -1,13 +1,14 @@
 package org.atlas.bank.atlas_bank.transaction.service.fraud;
 
 import lombok.extern.slf4j.Slf4j;
+import org.atlas.bank.atlas_bank.application.port.out.FraudCheckPort;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
 @Component
 @Slf4j
-public class ExternalFraudCheckAdapter implements FraudChecker {
+public class ExternalFraudCheckAdapter implements FraudChecker, FraudCheckPort {
     @Override
     public FraudCheckResult checkTransaction(Long accountId, BigDecimal amount) {
         ExternalFraudResponse response = callExternalFraudService(accountId, amount);

@@ -2,6 +2,7 @@ package org.atlas.bank.atlas_bank.transaction.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.atlas.bank.atlas_bank.application.port.in.TransferMoneyUseCase;
 import org.atlas.bank.atlas_bank.transaction.DTO.TransactionMapper;
 import org.atlas.bank.atlas_bank.transaction.DTO.TransactionResponse;
 import org.atlas.bank.atlas_bank.transaction.DTO.TransferRequest;
@@ -16,13 +17,13 @@ import java.util.List;
 @RequestMapping("/api/v1/transactions")
 @RequiredArgsConstructor
 public class TransactionController {
-    private final ITransferService transferService;
+    private final TransferMoneyUseCase transferMoneyUseCase;
     private final ITransactionQueryService transactionQueryService;
     private final TransactionMapper transactionMapper;
 
     @PostMapping("/transfer")
     public ResponseEntity<TransactionResponse> transfer(@Valid @RequestBody TransferRequest transferRequest) {
-        return ResponseEntity.ok(transactionMapper.toResponse(transferService.execute(
+        return ResponseEntity.ok(transactionMapper.toResponse(transferMoneyUseCase.execute(
                         transferRequest.getSourceAccountId(),
                         transferRequest.getTargetAccountId(),
                         transferRequest.getAmount()

@@ -3,7 +3,8 @@ package org.atlas.bank.atlas_bank.transaction.service.transfer;
 import jakarta.transaction.Transactional;
 import org.atlas.bank.atlas_bank.account.exception.AccountNotFoundException;
 import org.atlas.bank.atlas_bank.account.model.Account;
-import org.atlas.bank.atlas_bank.account.repository.DomainAccountRepository;
+import org.atlas.bank.atlas_bank.application.port.in.TransferMoneyUseCase;
+import org.atlas.bank.atlas_bank.application.port.out.AccountRepositoryPort;
 import org.atlas.bank.atlas_bank.transaction.model.Transaction;
 import org.atlas.bank.atlas_bank.transaction.repository.TransactionRepository;
 import org.atlas.bank.atlas_bank.transaction.service.domain.TransferDomainService;
@@ -16,21 +17,21 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-public class TransferService extends TransactionProcessor<TransferContext> implements ITransferService {
-    private final DomainAccountRepository domainAccountRepository;
+public class TransferService extends TransactionProcessor<TransferContext> implements ITransferService, TransferMoneyUseCase {
+    private final AccountRepositoryPort accountRepositoryPort;
     private final List<FeeCalculator> feeCalculators;
     private final List<TransferValidator> validators;
     private final TransferDomainService transferDomainService;
 
     public TransferService(
             TransactionRepository transactionRepository,
-            DomainAccountRepository domainAccountRepository,
+            AccountRepositoryPort accountRepositoryPort,
             List<FeeCalculator> feeCalculators,
             List<TransferValidator> validators,
             TransferDomainService transferDomainService
     ) {
         super(transactionRepository);
-        this.domainAccountRepository = domainAccountRepository;
+        this.accountRepositoryPort = accountRepositoryPort;
         this.feeCalculators = feeCalculators;
         this.transferDomainService = transferDomainService;
         this.validators = validators;
@@ -41,9 +42,9 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
     @Transactional
     public Transaction execute(Long fromId, Long toId, BigDecimal amount) {
         // Buscar cuentas
-        Account from = domainAccountRepository.findById(fromId)
+        Account from = accountRepositoryPort.findById(fromId)
                 .orElseThrow(() -> new AccountNotFoundException(fromId));
-        Account to = domainAccountRepository.findById(toId)
+        Account to = accountRepositoryPort.findById(toId)
                 .orElseThrow(() -> new AccountNotFoundException(toId));
 
         Transaction transaction = process(new TransferContext(from, to, amount));
@@ -76,8 +77,8 @@ public class TransferService extends TransactionProcessor<TransferContext> imple
 
         transferDomainService.transfer(from, to, context.amount(), fee);
 
-        domainAccountRepository.save(from);
-        domainAccountRepository.save(to);
+        accountRepositoryPort.save(from);
+        accountRepositoryPort.save(to);
     }
 
     @Override
