@@ -2,7 +2,7 @@ package org.atlas.bank.atlas_bank.costumer.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.atlas.bank.atlas_bank.shared.model.Email;
+import org.atlas.bank.atlas_bank.domain.model.shared.Email;
 
 import java.time.LocalDateTime;
 

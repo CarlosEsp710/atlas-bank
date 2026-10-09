@@ -1,7 +1,7 @@
 package org.atlas.bank.atlas_bank.transaction.service.domain;
 
-import org.atlas.bank.atlas_bank.account.model.Account;
-import org.atlas.bank.atlas_bank.shared.model.Money;
+import org.atlas.bank.atlas_bank.domain.model.account.Account;
+import org.atlas.bank.atlas_bank.domain.model.shared.Money;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

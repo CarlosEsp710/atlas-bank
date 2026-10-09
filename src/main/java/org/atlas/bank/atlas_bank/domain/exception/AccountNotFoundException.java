@@ -1,4 +1,4 @@
-package org.atlas.bank.atlas_bank.account.exception;
+package org.atlas.bank.atlas_bank.domain.exception;
 
 public class AccountNotFoundException extends RuntimeException {
     public AccountNotFoundException(Long id) {

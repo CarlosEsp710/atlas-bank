@@ -1,8 +1,8 @@
 package org.atlas.bank.atlas_bank.transaction.service.transfer;
 
 import jakarta.transaction.Transactional;
-import org.atlas.bank.atlas_bank.account.exception.AccountNotFoundException;
-import org.atlas.bank.atlas_bank.account.model.Account;
+import org.atlas.bank.atlas_bank.domain.exception.AccountNotFoundException;
+import org.atlas.bank.atlas_bank.domain.model.account.Account;
 import org.atlas.bank.atlas_bank.application.port.in.TransferMoneyUseCase;
 import org.atlas.bank.atlas_bank.application.port.out.AccountRepositoryPort;
 import org.atlas.bank.atlas_bank.transaction.model.Transaction;

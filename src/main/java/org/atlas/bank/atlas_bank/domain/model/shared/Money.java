@@ -1,9 +1,5 @@
-package org.atlas.bank.atlas_bank.shared.model;
+package org.atlas.bank.atlas_bank.domain.model.shared;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,17 +7,11 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@Embeddable
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Money {
-
-    @Column(name = "amount", nullable = false)
     private BigDecimal amount;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "currency", nullable = false, length = 3)
     private Currency currency;
 
     private Money(BigDecimal amount, Currency currency) {

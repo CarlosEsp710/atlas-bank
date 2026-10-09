@@ -1,4 +1,4 @@
-package org.atlas.bank.atlas_bank.account.model;
+package org.atlas.bank.atlas_bank.domain.model.account;
 
 public enum AccountStatus {
     ACTIVE,

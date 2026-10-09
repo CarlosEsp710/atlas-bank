@@ -1,6 +1,6 @@
-package org.atlas.bank.atlas_bank.account.service;
+package org.atlas.bank.atlas_bank.application.service;
 
-import org.atlas.bank.atlas_bank.account.model.Account;
+import org.atlas.bank.atlas_bank.domain.model.account.Account;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
-package org.atlas.bank.atlas_bank.account.DTO;
+package org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
-import org.atlas.bank.atlas_bank.account.model.AccountType;
+import org.atlas.bank.atlas_bank.domain.model.account.AccountType;
 
 import java.math.BigDecimal;
 

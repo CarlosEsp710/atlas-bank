@@ -1,12 +1,10 @@
-package org.atlas.bank.atlas_bank.shared.model;
+package org.atlas.bank.atlas_bank.domain.model.shared;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Locale;
 
 @Embeddable
 @Getter

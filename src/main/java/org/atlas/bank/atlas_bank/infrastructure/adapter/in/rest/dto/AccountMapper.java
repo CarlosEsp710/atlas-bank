@@ -1,9 +1,9 @@
-package org.atlas.bank.atlas_bank.account.DTO;
+package org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto;
 
-import org.atlas.bank.atlas_bank.account.model.Account;
-import org.atlas.bank.atlas_bank.shared.model.Currency;
-import org.atlas.bank.atlas_bank.shared.model.Email;
-import org.atlas.bank.atlas_bank.shared.model.Money;
+import org.atlas.bank.atlas_bank.domain.model.account.Account;
+import org.atlas.bank.atlas_bank.domain.model.shared.Currency;
+import org.atlas.bank.atlas_bank.domain.model.shared.Email;
+import org.atlas.bank.atlas_bank.domain.model.shared.Money;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

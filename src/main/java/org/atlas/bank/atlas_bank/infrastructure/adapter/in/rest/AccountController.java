@@ -1,21 +1,20 @@
-package org.atlas.bank.atlas_bank.account.controller;
+package org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.atlas.bank.atlas_bank.account.DTO.AccountMapper;
-import org.atlas.bank.atlas_bank.account.DTO.AccountResponse;
-import org.atlas.bank.atlas_bank.account.DTO.CreateAccountRequest;
-import org.atlas.bank.atlas_bank.account.DTO.DashboardResponse;
-import org.atlas.bank.atlas_bank.account.model.Account;
+import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.AccountMapper;
+import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.AccountResponse;
+import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.CreateAccountRequest;
+import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.DashboardResponse;
+import org.atlas.bank.atlas_bank.domain.model.account.Account;
 import org.atlas.bank.atlas_bank.account.service.AccountDashboardFacade;
-import org.atlas.bank.atlas_bank.account.service.IAccountService;
+import org.atlas.bank.atlas_bank.application.service.IAccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController

@@ -1,8 +1,9 @@
 package org.atlas.bank.atlas_bank.account.service;
 
 import lombok.RequiredArgsConstructor;
-import org.atlas.bank.atlas_bank.account.DTO.DashboardResponse;
-import org.atlas.bank.atlas_bank.account.model.Account;
+import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.DashboardResponse;
+import org.atlas.bank.atlas_bank.application.service.IAccountService;
+import org.atlas.bank.atlas_bank.domain.model.account.Account;
 import org.atlas.bank.atlas_bank.transaction.DTO.TransactionMapper;
 import org.atlas.bank.atlas_bank.transaction.DTO.TransactionResponse;
 import org.atlas.bank.atlas_bank.transaction.service.ITransactionQueryService;

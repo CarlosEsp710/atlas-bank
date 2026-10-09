@@ -1,7 +1,7 @@
-package org.atlas.bank.atlas_bank.account.service;
+package org.atlas.bank.atlas_bank.application.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.atlas.bank.atlas_bank.account.model.Account;
+import org.atlas.bank.atlas_bank.domain.model.account.Account;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
