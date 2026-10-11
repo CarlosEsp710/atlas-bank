@@ -5,8 +5,6 @@ import lombok.*;
 import org.atlas.bank.atlas_bank.domain.model.account.AccountStatus;
 import org.atlas.bank.atlas_bank.domain.model.account.AccountType;
 import org.atlas.bank.atlas_bank.domain.model.shared.Currency;
-import org.atlas.bank.atlas_bank.domain.model.shared.Email;
-import org.atlas.bank.atlas_bank.domain.model.shared.Money;
 
 import java.time.LocalDateTime;
 

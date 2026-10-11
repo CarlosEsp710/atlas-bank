@@ -3,12 +3,11 @@ package org.atlas.bank.atlas_bank.infrastructure.adapter.out.persistence;
 import jakarta.persistence.*;
 import lombok.*;
 import org.atlas.bank.atlas_bank.domain.model.customer.CustomerStatus;
-import org.atlas.bank.atlas_bank.domain.model.shared.Email;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "costumers")
+@Table(name = "customers")
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

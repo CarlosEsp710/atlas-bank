@@ -1,9 +1,7 @@
 package org.atlas.bank.atlas_bank.infrastructure.adapter.out.persistence;
 
 import org.atlas.bank.atlas_bank.domain.model.account.Account;
-import org.atlas.bank.atlas_bank.domain.model.shared.Currency;
 import org.atlas.bank.atlas_bank.domain.model.shared.Email;
-import org.atlas.bank.atlas_bank.domain.model.shared.Money;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,9 +18,9 @@ public class AccountPersistenceMapper {
                         : null)
                 .type(entity.getType())
                 .balance(entity.getBalance() != null
-                        ? Money.of(
+                        ? org.atlas.bank.atlas_bank.domain.model.shared.Money.of(
                         entity.getBalance().getAmount(),
-                        Currency.valueOf(
+                        org.atlas.bank.atlas_bank.domain.model.shared.Currency.valueOf(
                                 entity.getBalance().getCurrency().name()))
                         : null)
                 .status(entity.getStatus())
@@ -38,13 +36,13 @@ public class AccountPersistenceMapper {
         entity.setAccountNumber(account.getAccountNumber());
         entity.setOwnerName(account.getOwnerName());
         entity.setEmail(account.getEmail() != null
-                ? Email.of(account.getEmail().getValue())
+                ? org.atlas.bank.atlas_bank.infrastructure.adapter.out.persistence.Email.of(account.getEmail().getValue())
                 : null);
         entity.setType(account.getType());
         entity.setBalance(account.getBalance() != null
                 ? Money.of(
                 account.getBalance().getAmount(),
-                Currency.valueOf(
+                org.atlas.bank.atlas_bank.domain.model.shared.Currency.valueOf(
                         account.getBalance().getCurrency().name()))
                 : null);
         entity.setStatus(account.getStatus());

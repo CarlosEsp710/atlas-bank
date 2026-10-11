@@ -26,9 +26,8 @@ public class CustomerPersistenceMapper {
         customerJpaEntity.setId(customer.getId());
         customerJpaEntity.setName(customer.getName());
         customerJpaEntity.setEmail(customer.getEmail() != null
-                ? Email.of(customer.getEmail().getValue())
-                : null
-        );
+                ? org.atlas.bank.atlas_bank.infrastructure.adapter.out.persistence.Email.of(customer.getEmail().getValue())
+                : null);
         customerJpaEntity.setStatus(customer.getStatus());
         customerJpaEntity.setCreatedAt(customer.getCreatedAt());
         return customerJpaEntity;
