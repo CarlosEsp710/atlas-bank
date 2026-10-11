@@ -1,7 +1,0 @@
-package org.atlas.bank.atlas_bank.transaction.service.fraud;
-
-import java.math.BigDecimal;
-
-public interface FraudChecker {
-    FraudCheckResult checkTransaction(Long accountId, BigDecimal amount);
-}

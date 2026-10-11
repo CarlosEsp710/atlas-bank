@@ -9,7 +9,6 @@ import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.AccountRespo
 import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.CreateAccountRequest;
 import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.DashboardResponse;
 import org.atlas.bank.atlas_bank.domain.model.account.Account;
-import org.atlas.bank.atlas_bank.account.service.AccountDashboardFacade;
 import org.atlas.bank.atlas_bank.application.service.IAccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

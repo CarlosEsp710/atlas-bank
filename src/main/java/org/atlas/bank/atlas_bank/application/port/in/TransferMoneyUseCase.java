@@ -1,6 +1,6 @@
 package org.atlas.bank.atlas_bank.application.port.in;
 
-import org.atlas.bank.atlas_bank.transaction.model.Transaction;
+import org.atlas.bank.atlas_bank.domain.model.transaction.Transaction;
 
 import java.math.BigDecimal;
 
