@@ -1,12 +1,12 @@
 package org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest;
 
 import lombok.RequiredArgsConstructor;
+import org.atlas.bank.atlas_bank.application.port.in.GetAccountUseCase;
+import org.atlas.bank.atlas_bank.application.port.in.GetTransactionsByAccountUseCase;
 import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.DashboardResponse;
-import org.atlas.bank.atlas_bank.application.service.IAccountService;
 import org.atlas.bank.atlas_bank.domain.model.account.Account;
 import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.TransactionMapper;
 import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.TransactionResponse;
-import org.atlas.bank.atlas_bank.application.service.ITransactionQueryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,15 +14,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AccountDashboardFacade {
-    private final IAccountService accountService;
-    private final ITransactionQueryService transactionQueryService;
+    private final GetAccountUseCase getAccountUseCase;
+    private final GetTransactionsByAccountUseCase getTransactionsByAccountUseCase;
     private final TransactionMapper transactionMapper;
 
     public DashboardResponse getAccountDashboard(Long accountId) {
-        Account account = accountService.getAccountById(accountId);
+        Account account = getAccountUseCase.getAccountById(accountId);
 
-        List<TransactionResponse> recentTransactions = transactionQueryService
-                .getByAccountId(accountId)
+        List<TransactionResponse> recentTransactions = getTransactionsByAccountUseCase
+                .getTransactionsByAccount(accountId)
                 .stream()
                 .map(transactionMapper::toResponse)
                 .toList();

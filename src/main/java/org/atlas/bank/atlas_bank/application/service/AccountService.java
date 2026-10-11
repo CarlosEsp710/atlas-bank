@@ -1,6 +1,9 @@
 package org.atlas.bank.atlas_bank.application.service;
 
 import lombok.RequiredArgsConstructor;
+import org.atlas.bank.atlas_bank.application.port.in.CreateAccountUseCase;
+import org.atlas.bank.atlas_bank.application.port.in.GetAccountUseCase;
+import org.atlas.bank.atlas_bank.application.port.in.ListAccountsUseCase;
 import org.atlas.bank.atlas_bank.application.port.out.AccountRepositoryPort;
 import org.atlas.bank.atlas_bank.domain.exception.AccountNotFoundException;
 import org.atlas.bank.atlas_bank.domain.model.account.Account;
@@ -12,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService implements IAccountService {
+public class AccountService implements CreateAccountUseCase, ListAccountsUseCase, GetAccountUseCase {
     private final AccountRepositoryPort accountRepository;
 
     @Override
@@ -23,7 +26,7 @@ public class AccountService implements IAccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Account> getAllAccounts() {
+    public List<Account> listAccounts() {
         return accountRepository.findAll();
     }
 
