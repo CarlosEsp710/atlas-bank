@@ -1,12 +1,16 @@
 package org.atlas.bank.atlas_bank.application.service;
 
 import lombok.RequiredArgsConstructor;
+import org.atlas.bank.atlas_bank.application.command.CreateAccountCommand;
 import org.atlas.bank.atlas_bank.application.port.in.CreateAccountUseCase;
 import org.atlas.bank.atlas_bank.application.port.in.GetAccountUseCase;
 import org.atlas.bank.atlas_bank.application.port.in.ListAccountsUseCase;
 import org.atlas.bank.atlas_bank.application.port.out.AccountRepositoryPort;
 import org.atlas.bank.atlas_bank.domain.exception.AccountNotFoundException;
 import org.atlas.bank.atlas_bank.domain.model.account.Account;
+import org.atlas.bank.atlas_bank.domain.model.shared.Currency;
+import org.atlas.bank.atlas_bank.domain.model.shared.Email;
+import org.atlas.bank.atlas_bank.domain.model.shared.Money;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +24,15 @@ public class AccountService implements CreateAccountUseCase, ListAccountsUseCase
 
     @Override
     @Transactional
-    public Account createAccount(Account account) {
+    public Account createAccount(CreateAccountCommand command) {
+        Account account = Account.builder()
+                .accountNumber(command.accountNumber())
+                .ownerName(command.ownerName())
+                .email(Email.of(command.email()))
+                .type(command.type())
+                .balance(Money.of(command.balance(), Currency.MXN))
+                .build();
+
         return accountRepository.save(account);
     }
 

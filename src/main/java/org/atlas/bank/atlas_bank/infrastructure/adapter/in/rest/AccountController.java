@@ -3,6 +3,7 @@ package org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.atlas.bank.atlas_bank.application.command.CreateAccountCommand;
 import org.atlas.bank.atlas_bank.application.facade.AccountDashboardFacade;
 import org.atlas.bank.atlas_bank.application.port.in.CreateAccountUseCase;
 import org.atlas.bank.atlas_bank.application.port.in.GetAccountUseCase;
@@ -31,8 +32,14 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<AccountResponse> create(@Valid @RequestBody CreateAccountRequest request) {
-        Account account = accountMapper.toEntity(request);
-        Account createdAccount = createAccountUseCase.createAccount(account);
+        CreateAccountCommand command = CreateAccountCommand.builder()
+                .accountNumber(request.getAccountNumber())
+                .ownerName(request.getOwnerName())
+                .email(request.getEmail())
+                .type(request.getType())
+                .balance(request.getBalance())
+                .build();
+        Account createdAccount = createAccountUseCase.createAccount(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(accountMapper.toResponse(createdAccount));
     }
 

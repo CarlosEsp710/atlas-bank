@@ -2,6 +2,7 @@ package org.atlas.bank.atlas_bank.application.service;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.atlas.bank.atlas_bank.application.command.CreateAccountCommand;
 import org.atlas.bank.atlas_bank.application.port.in.CreateAccountUseCase;
 import org.atlas.bank.atlas_bank.application.port.in.GetAccountUseCase;
 import org.atlas.bank.atlas_bank.application.port.in.ListAccountsUseCase;
@@ -40,9 +41,9 @@ public class AuditableAccountService implements CreateAccountUseCase, ListAccoun
 
     @Override
     @Transactional
-    public Account createAccount(Account account) {
-        log.info("Creating account - Account Number: {}, Owner: {}", account.getAccountNumber(), account.getOwnerName());
-        Account createdAccount = createAccountUseCase.createAccount(account);
+    public Account createAccount(CreateAccountCommand command) {
+        log.info("Creating account - Account Number: {}, Owner: {}", command.accountNumber(), command.ownerName());
+        Account createdAccount = createAccountUseCase.createAccount(command);
         log.info("Account created successfully - Account ID: {}", createdAccount.getId());
 
         return createdAccount;
