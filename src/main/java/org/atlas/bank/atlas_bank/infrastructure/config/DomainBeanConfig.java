@@ -7,7 +7,7 @@ import org.atlas.bank.atlas_bank.domain.strategy.fee.DefaultFeeCalculator;
 import org.atlas.bank.atlas_bank.domain.strategy.fee.PremiumFeeCalculator;
 import org.atlas.bank.atlas_bank.domain.strategy.fee.SavingsFeeCalculator;
 import org.atlas.bank.atlas_bank.domain.validation.AccountStatusValidator;
-import org.atlas.bank.atlas_bank.domain.validation.FraudValidator;
+import org.atlas.bank.atlas_bank.application.validation.FraudValidator;
 import org.atlas.bank.atlas_bank.domain.validation.SufficientFundValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

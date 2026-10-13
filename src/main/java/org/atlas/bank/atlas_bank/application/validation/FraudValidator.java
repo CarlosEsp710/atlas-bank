@@ -1,10 +1,11 @@
-package org.atlas.bank.atlas_bank.domain.validation;
+package org.atlas.bank.atlas_bank.application.validation;
 
 import lombok.RequiredArgsConstructor;
 import org.atlas.bank.atlas_bank.application.port.out.FraudCheckPort;
 import org.atlas.bank.atlas_bank.domain.exception.FraudCheckException;
 import org.atlas.bank.atlas_bank.domain.model.shared.FraudCheckResult;
 import org.atlas.bank.atlas_bank.domain.model.transaction.TransferContext;
+import org.atlas.bank.atlas_bank.domain.validation.TransferValidator;
 
 @RequiredArgsConstructor
 public class FraudValidator implements TransferValidator {
