@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.atlas.bank.atlas_bank.application.command.TransferMoneyCommand;
 import org.atlas.bank.atlas_bank.application.port.in.GetTransactionsByAccountUseCase;
 import org.atlas.bank.atlas_bank.application.port.in.TransferMoneyUseCase;
+import org.atlas.bank.atlas_bank.application.query.GetAccountStatementQuery;
+import org.atlas.bank.atlas_bank.application.query.TransactionReadModel;
 import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.TransactionMapper;
 import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.TransactionResponse;
 import org.atlas.bank.atlas_bank.infrastructure.adapter.in.rest.dto.TransferRequest;
@@ -33,7 +35,11 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}/transactions")
-    public ResponseEntity<List<TransactionResponse>> getTransactions(@PathVariable Long id) {
-        return ResponseEntity.ok(getTransactionsByAccountUseCase.getTransactionsByAccount(id).stream().map(transactionMapper::toResponse).toList());
+    public ResponseEntity<List<TransactionReadModel>> getTransactions(@PathVariable Long id) {
+        GetAccountStatementQuery query = new GetAccountStatementQuery(id);
+
+        List<TransactionReadModel> transactions = getTransactionsByAccountUseCase.getTransactionsByAccount(query);
+
+        return ResponseEntity.ok(transactions);
     }
 }
