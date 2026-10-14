@@ -35,6 +35,9 @@ public class SecurityConfig {
                                 .hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.GET, "/api/v1/transactions/{id}/transactions")
                                 .hasAnyRole("ADMIN", "USER")
+                                // AI Chat
+                                .requestMatchers(HttpMethod.POST, "/api/v1/ai-chat/message")
+                                .hasAnyRole("ADMIN", "USER")
                                 // H2
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .anyRequest().authenticated()
