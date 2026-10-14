@@ -1,9 +1,12 @@
 package org.atlas.bank.atlas_bank.infrastructure.adapter.in.ai;
 
 import lombok.RequiredArgsConstructor;
+import org.atlas.bank.atlas_bank.application.command.CloseAccountCommand;
 import org.atlas.bank.atlas_bank.application.command.TransferMoneyCommand;
+import org.atlas.bank.atlas_bank.application.port.in.CloseAccountUseCase;
 import org.atlas.bank.atlas_bank.application.port.in.GetAccountUseCase;
 import org.atlas.bank.atlas_bank.application.port.in.TransferMoneyUseCase;
+import org.atlas.bank.atlas_bank.domain.exception.AccountNotActiveException;
 import org.atlas.bank.atlas_bank.domain.exception.InsufficientFundsException;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
@@ -16,6 +19,7 @@ import java.math.BigDecimal;
 public class AtlasBankTools {
     private final TransferMoneyUseCase transferMoneyUseCase;
     private final GetAccountUseCase getAccountUseCase;
+    private final CloseAccountUseCase closeAccountUseCase;
 
     @Tool(
             name = "transferMoney",
@@ -55,6 +59,24 @@ public class AtlasBankTools {
             return "Account balance for account " + accountId + ": $" + account.getBalance();
         } catch (Exception e) {
             return "Failed to get account balance: " + e.getMessage();
+        }
+    }
+
+    @Tool(
+            name = "closeAccount",
+            description = "Close an active account with a zero balance"
+    )
+    public String closeAccount(
+            @ToolParam(description = "The ID of the account to close") Long accountId
+    ) {
+        try {
+            CloseAccountCommand command = new CloseAccountCommand(accountId);
+            closeAccountUseCase.close(command);
+            return "Account closed successfully: " + accountId;
+        } catch (AccountNotActiveException e) {
+            return "Failed to close account " + accountId + ": Account is not active";
+        } catch (IllegalStateException e) {
+            return "Failed to close account " + accountId + ": " + e.getMessage();
         }
     }
 }
